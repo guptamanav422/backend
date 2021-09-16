@@ -7,11 +7,13 @@ app.listen('5000',function(){
 
 
 app.use(express.json());
-let user={};
-
+let user=[];
+app.use(express.static('public'));
 
 const userRouter=express.Router();
+let authRouter=express.Router();
 app.use('/user',userRouter);
+app.use("/auth",authRouter)
 // mouting in express 
 userRouter
 .route("/")
@@ -24,6 +26,9 @@ userRouter
 .route('/:id')
 .get(getUserById)
 
+authRouter
+.route("/signup")
+.post(signUpUser)
 
 
 // app.get("/",(req,res)=>{
@@ -62,4 +67,21 @@ function deleteUser(req,res){
 function getUserById(req,res){
     console.log(req.params);
     res.send(req.params.id);
+}
+
+
+function signUpUser(req,res){
+    // let userDetails=req.body;
+    // let name=userDetails.name;
+    // let email=userDetails.email;
+    // let password=userDetails.password;
+
+    let {email,name,password}=req.body;
+    user.push({email,name,password});
+    console.log("user",req.body);
+
+    res.json({
+        "message":"user signed up",
+        user:req.body
+    })
 }
