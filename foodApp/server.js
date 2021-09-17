@@ -7,7 +7,7 @@ app.listen('5000',function(){
 
 
 app.use(express.json());
-let user=[];
+let user=["a1"];
 app.use(express.static('public'));
 
 const userRouter=express.Router();
@@ -22,18 +22,18 @@ userRouter
 .patch(updateUser)
 .delete(deleteUser)
 
-userRouter
-.route('/:id')
-.get(getUserById)
+// userRouter
+// .route('/:id')
+// .get(getUserById)
 
 authRouter
 .route("/signup")
 .post(signUpUser)
 
 
-// app.get("/",(req,res)=>{
-//     res.send("home page");
-// })
+app.get("/",(req,res)=>{
+    res.send("home page");
+})
 
 // app.get("/user",getUser)
 function getUser(req,res){
@@ -85,3 +85,14 @@ function signUpUser(req,res){
         user:req.body
     })
 }
+
+
+// redirects 
+app.get('/user-all', (req,res)=>{
+    res.redirect("/user");
+})
+
+// 404 page 
+app.use((req,res)=>{
+    res.sendFile("public/404.html" ,{root:__dirname})
+})
