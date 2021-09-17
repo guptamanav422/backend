@@ -10,11 +10,29 @@ app.use(express.json());
 let user=["a1"];
 app.use(express.static('public'));
 
+
+// app.use((req,res,next)=>{
+//     //  1 // res.send("I am A middleWare");
+//     // 2 
+//     console.log("I am a Middleware"); 
+//     next();
+// })
+
 const userRouter=express.Router();
 let authRouter=express.Router();
+
+
+// app.use((req,res,next)=>{
+//     // 3 
+//     console.log("I am uses a  Middleware 2nd time "); 
+//     next();
+// })
+
 app.use('/user',userRouter);
-app.use("/auth",authRouter)
-// mouting in express 
+app.use("/auth",authRouter);
+// mouting in express
+
+
 userRouter
 .route("/")
 .get(getUser)
@@ -30,6 +48,30 @@ authRouter
 .route("/signup")
 .post(signUpUser)
 
+authRouter
+.route("/forgetPassword")
+.get(forgetPasswordGet)
+.post(forgetPasswordPost,validateEmail)
+
+
+
+function forgetPasswordGet(req,res){
+    res.sendFile("public/forgotPassword.html",{root:__dirname})
+}
+function  forgetPasswordPost(req,res,next){
+    // res.json({
+    //     message:"message Received",
+    //     email:req.body.email
+    // })
+    next();
+}
+function validateEmail(req,res){
+    // here check if email is correct or not 
+    res.json({
+        message:"message Receive",
+        email:req.body.email
+    })
+}
 
 app.get("/",(req,res)=>{
     res.send("home page");
