@@ -1,9 +1,9 @@
 const mongoose=require("mongoose");
 const validator= require("email-validator")
-let db_Link=require('../secrets')
-mongoose.connect(db_Link)
+let {db_link}=require('../secrets')
+mongoose.connect(db_link)
 .then(function(db){
-    console.log(db);
+    // console.log(db)
     console.log("db Connected");
 })
 .catch(function(err){
@@ -47,7 +47,7 @@ const userModel=mongoose.model('userModel',userSchema);
     let user={
         name:"Manav Gupta",
         age:"19",
-        email:"guptamanav422@email.com",
+        email:"manavgupta284@email.com",
         password:"12345678",
         confirmPassword:"12345678"
     }
