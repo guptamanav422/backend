@@ -113,11 +113,7 @@ function getUserById(req,res){
 
 
 function signUpUser(req,res){
-    // let userDetails=req.body;
-    // let name=userDetails.name;
-    // let email=userDetails.email;
-    // let password=userDetails.password;
-
+    
     let {email,name,password}=req.body;
     user.push({email,name,password});
     console.log("user",req.body);
