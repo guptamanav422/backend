@@ -1,6 +1,7 @@
 const express = require("express");
 let authRouter = express.Router();
 const userModel=require("../models/userModel")
+const cookie=require("cookie-parser")
 
 // routes 
 authRouter
@@ -12,6 +13,9 @@ authRouter
   .get(forgetPasswordGet)
   .post(forgetPasswordPost, validateEmail);
 
+  authRouter
+  .route("/login")
+  .post(loginUser);
 
 //   functions 
 function setCreatedAt(re, res, next) {
@@ -62,4 +66,41 @@ function validateEmail(req, res) {
   });
 }
 
+async function loginUser(req,res) {
+    // email password 
+
+    try{
+        if(req.body.email){
+            let user= await userModel.findOne({email:req.body.email});
+            if(user){
+                if(req.body.password==user.password){
+                    res.cookie('login','12345',{httpOnly:true});
+                    return res.json({
+                        message:"user logged in"
+                    })
+                }
+                else{
+                    return res.json({
+                        message:"email or password is wrong"
+                    })
+                }
+            }
+            else{
+                return res.json({
+                    message:"email or password is wrong"
+                })
+            }
+        }
+        else{
+            return res.json({
+                message:"user is not present"
+            })
+        }
+    }
+    catch(err){
+        res.status(500).json({
+            message:err.message
+        })
+    }
+}
 module.exports=authRouter;

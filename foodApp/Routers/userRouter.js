@@ -1,10 +1,11 @@
 const express = require("express");
+const userModel = require("../models/userModel");
 const userRouter = express.Router();
 
 // 
 userRouter
   .route("/")
-  .get(getUser)
+  .get(protectRoute,getUsers)
   .post(postUser)
   .patch(updateUser)
   .delete(deleteUser);
@@ -17,9 +18,25 @@ userRouter
 // functions 
 
   // app.get("/user",getUser)
-function getUser(req, res) {
-    res.json(user);
-  }
+ async function getUsers(req, res) {
+    try{
+        console.log("getUser Called");
+        let users=await userModel.find();
+        if(users){
+            return res.json(users);
+        }
+        else {
+            return res.json({
+                message:"users Not Found"
+            })
+        }
+    }
+    catch(err){
+        return res.json({
+            message:err.message
+        })
+    }
+}
   
   // app.post("/user",postUser)
   function postUser(req, res) {
@@ -49,4 +66,23 @@ function getUser(req, res) {
     res.send(req.params.id);
   }
 
+  function protectRoute(req,res,next) {
+      try{
+          if(req.cookies){
+              if(req.cookies.login==="12345"){
+                next();
+              }
+          }
+          else{
+              res.json({
+                  message:"Operation is not allowed"
+              })
+          }
+      }
+      catch(err){
+          return res.status(500).json({
+              message:err.message
+          })
+      }
+  }
   module.exports=userRouter;
