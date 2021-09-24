@@ -1,8 +1,8 @@
 const express = require("express");
 const userModel = require("../models/userModel");
 const userRouter = express.Router();
-
-// 
+const protectRoute=require("./authHelper")
+const jsw=require("jsonwebtoken");
 userRouter
   .route("/")
   .get(protectRoute,getUsers)
@@ -66,23 +66,4 @@ userRouter
     res.send(req.params.id);
   }
 
-  function protectRoute(req,res,next) {
-      try{
-          if(req.cookies){
-              if(req.cookies.login==="12345"){
-                next();
-              }
-          }
-          else{
-              res.json({
-                  message:"Operation is not allowed"
-              })
-          }
-      }
-      catch(err){
-          return res.status(500).json({
-              message:err.message
-          })
-      }
-  }
   module.exports=userRouter;
